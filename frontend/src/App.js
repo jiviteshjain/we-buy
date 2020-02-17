@@ -1,25 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Route, Link , Switch} from "react-router-dom";
+import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import $ from 'jquery';
+import Popper from 'popper.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+
 import './App.css';
+
+import Navbar from './components/navbar'
+import Landing from './components/landing'
+import RegisterCustomer from './components/register-customer';
+import RegisterVendor from './components/register-vendor';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+	<Router>
+		<Navbar/>
+		<Route exact path="/" component={Landing} />
+		<Route exact path="/auth/register/customer" component={RegisterCustomer} />
+		<Route exact path="/auth/register/vendor" component={RegisterVendor} />
+	</Router>
   );
 }
 

@@ -26,7 +26,7 @@ module.exports = function validateRegisterCustomerInput(data) {
     if (Validator.isEmpty(data.phone)) {
         errors.phone = "Now we can't dial that :/";
     } else if (!Validator.isMobilePhone(data.phone, "en-IN", {strictMode: true})) {
-        errors.phone = "Please provide your Indian mobile number as +91-XXXXXXXXXX."
+        errors.phone = "Please provide your Indian mobile number as +91XXXXXXXXXX."
     }
 
     // check Email
