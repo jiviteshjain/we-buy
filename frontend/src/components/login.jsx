@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from 'axios';
 
-import PageTitle from './page-title'
+import PageTitle from './page-title';
 
-export default class RegisterVendor extends Component {
-    constructor() {
-        super();
+export default class Login extends Component {
+    constructor(props) {
+        super(props);
 
         this.state = {
             formData: {},
@@ -30,40 +30,31 @@ export default class RegisterVendor extends Component {
         console.log(this.state.formData);
         axios({
             method: "POST",
-            url: "/auth/register/vendor",
+            url: "/auth/login",
             data: this.state.formData,
             headers: {
                 'Content-Type': 'application/json',
             }
         }).then((response) => {
-            alert("Welcome! We have you successfully registered.");
-            window.location.replace("http://localhost:3000/auth/login");
+            console.log(response)
+            if (response.data.success){
+                this.props.attemptLogin(response.data.token);
+            }
         }).catch(error => {
             if (error) {
-                console.log(error.response);
+                console.log(error);
                 this.setState({ isError: true });
                 this.setState({ errors: error.response.data });
             }
         });
     }
 
-
     render() {
         return (
             <React.Fragment>
-                <PageTitle bold="Register" normal=" as vendor" />
+                <PageTitle bold="Log" normal=" in" />
                 <div className="container">
                     <form>
-                        <div className="form-group row">
-                            <label htmlFor="name" className="col-sm-2 col-form-label">Name</label>
-                            <div className="col-sm-10">
-                                <input type="text" className="form-control" id="name" placeholder="John Doe" required onChange={this.handleChange} />
-                                {
-                                    this.state.isError &&
-                                    <p className="form-error">{this.state.errors.name}</p>
-                                }
-                            </div>
-                        </div>
                         <div className="form-group row">
                             <label htmlFor="email" className="col-sm-2 col-form-label">Email</label>
                             <div className="col-sm-10">
@@ -71,16 +62,6 @@ export default class RegisterVendor extends Component {
                                 {
                                     this.state.isError &&
                                     <p className="form-error">{this.state.errors.email}</p>
-                                }
-                            </div>
-                        </div>
-                        <div className="form-group row">
-                            <label htmlFor="address" className="col-sm-2 col-form-label">Address</label>
-                            <div className="col-sm-10">
-                                <textarea className="form-control" id="address" placeholder="221B Baker Street" required onChange={this.handleChange} />
-                                {
-                                    this.state.isError &&
-                                    <p className="form-error">{this.state.errors.address}</p>
                                 }
                             </div>
                         </div>
@@ -95,24 +76,13 @@ export default class RegisterVendor extends Component {
                             </div>
                         </div>
                         <div className="form-group row">
-                            <label htmlFor="password2" className="col-sm-2 col-form-label">Confirm Password</label>
-                            <div className="col-sm-10">
-                                <input type="password" className="form-control" id="password2" placeholder="secret" required onChange={this.handleChange} />
-                                {
-                                    this.state.isError &&
-                                    <p className="form-error">{this.state.errors.password2}</p>
-                                }
-                            </div>
-                        </div>
-                        <div className="form-group row">
                             <div className="col-12 text-center">
-                                <input type="button" className="btn muave shadow-move" onClick={this.handleSubmit} value="Register" />
+                                <input type="button" className="btn light-grey shadow-move" onClick={this.handleSubmit} value="Log in" />
                             </div>
                         </div>
                     </form>
                 </div>
             </React.Fragment>
-
-        )
+        );
     }
 }

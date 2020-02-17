@@ -36,11 +36,14 @@ export default class RegisterCustomer extends Component {
                 'Content-Type': 'application/json',
             }
         }).then((response) => {
+            alert("Welcome! We have you successfully registered.");
             window.location.replace("http://localhost:3000/auth/login");
         }).catch(error => {
-            console.log(error.response);
-            this.setState({isError: true});
-            this.setState({errors: error.response.data});
+            if (error) {
+                console.log(error.response);
+                this.setState({isError: true});
+                this.setState({errors: error.response.data});
+            }
         });
     }
 
