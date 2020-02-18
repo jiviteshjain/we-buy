@@ -14,7 +14,13 @@ export default class EnforceLogin extends Component {
         if (!isLoggedIn) {
             return <Redirect to="/auth/login" />;
         } else {
-            return <Route to={this.props.path} exact component={this.props.component} />;
+            if (this.props.hasProps) {
+                return <Route to={this.props.path} render={
+                    (props) => this.props.component
+                } />;
+            } else {
+                return <Route to={this.props.path} exact component={this.props.component}/>
+            }
         }
     }
 }

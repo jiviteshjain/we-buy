@@ -100,3 +100,8 @@ Link:hover {
 	font-weight: bold;
 	color: var(--red);
 }
+
+/* DASHBOARD */
+.card-pic {
+  max-width: 200px;
+}

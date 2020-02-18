@@ -18,6 +18,8 @@ import RegisterVendor from './components/register-vendor';
 import Login from './components/login';
 import AddProduct from './components/add-product';
 import EnforceLogin from './components/enforce-login';
+import EnforceLogout from './components/enforce-logout';
+import VendorDashboard from './components/dashboard-vendor';
 
 class App extends Component {
 	constructor() {
@@ -55,9 +57,43 @@ class App extends Component {
 			<Router>
 				<Navbar/>
 				<Route exact path="/" component={Landing} />
-				<Route exact path="/auth/register/customer" component={RegisterCustomer} />
-				<Route exact path="/auth/register/vendor" component={RegisterVendor} />
+				
+				<Route exact path = "/auth/register/customer"
+				render = {
+						(props) => <EnforceLogout {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={conf.USER_TYPE_VEND}
+						path='/auth/register/customer'
+						hasProps={false}
+						component={RegisterCustomer}
+						/>} />
+				{/* <Route exact path="/auth/register/customer" component={RegisterCustomer} /> */}
+				
+				<Route exact path = "/auth/register/vendor"
+				render = {
+						(props) => <EnforceLogout {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={conf.USER_TYPE_VEND}
+						path='/auth/register/vendor'
+						hasProps={false}
+						component={RegisterCustomer}
+						/>} />
+				{/* <Route exact path="/auth/register/vendor" component={RegisterVendor} /> */}
+				
+				
 				<Route exact path = "/auth/login"
+				render = {
+						(props) => <EnforceLogout {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={conf.USER_TYPE_VEND}
+						path='/auth/login'
+						hasProps={true}
+						component={<Login attemptLogin={this.attemptLogin}/>}
+						/>} />
+				{/* <Route exact path = "/auth/login"
 				render = {
 						(props) => < Login {
 							...props
@@ -65,6 +101,16 @@ class App extends Component {
 						attemptLogin = {
 							this.attemptLogin
 						}
+						/>} /> */}
+				<Route exact path = "/vendor/dashboard"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={conf.USER_TYPE_VEND}
+						path='/vendor/dashboard'
+						hasProps={true}
+						component={<VendorDashboard userName={this.state.userName}/>}
 						/>} />
 				<Route exact path = "/vendor/product/add"
 				render = {
@@ -73,8 +119,10 @@ class App extends Component {
 						type={this.state.userType}
 						desiredType={conf.USER_TYPE_VEND}
 						path='/vendor/product/add'
+						hasProps={false}
 						component={AddProduct}
 						/>} />
+				
 			</Router>
 		);
 	}
