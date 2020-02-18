@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from 'axios';
 
-import PageTitle from './page-title';
+import PageTitle from './page-title'
 
-export default class Login extends Component {
-    constructor(props) {
-        super(props);
+export default class AddProduct extends Component {
+    constructor() {
+        super();
 
         this.state = {
             formData: {},
@@ -30,19 +30,17 @@ export default class Login extends Component {
         console.log(this.state.formData);
         axios({
             method: "POST",
-            url: "/auth/login",
+            url: "/vendor/product/add",
             data: this.state.formData,
             headers: {
                 'Content-Type': 'application/json',
             }
         }).then((response) => {
-            console.log(response)
-            if (response.data.success){
-                this.props.attemptLogin(response.data.token);
-            }
+            alert("Your product has been added.");
+            window.location.replace("http://localhost:3000/vendor/dashboard");
         }).catch(error => {
             if (error) {
-                console.log(error);
+                console.log(error.response);
                 this.setState({ isError: true });
                 this.setState({ errors: error.response.data });
             }
@@ -52,37 +50,48 @@ export default class Login extends Component {
     render() {
         return (
             <React.Fragment>
-                <PageTitle bold="Log" normal=" in" />
+                <PageTitle bold="Add" normal=" a product" />
                 <div className="container">
                     <form>
                         <div className="form-group row">
-                            <label htmlFor="email" className="col-sm-2 col-form-label">Email</label>
+                            <label htmlFor="name" className="col-sm-2 col-form-label">Name</label>
                             <div className="col-sm-10">
-                                <input type="email" className="form-control" id="email" placeholder="someone@example.com" required onChange={this.handleChange} />
+                                <input type="text" className="form-control" id="name" placeholder="Hershey's Kisses" required onChange={this.handleChange} />
                                 {
                                     this.state.isError &&
-                                    <p className="form-error">{this.state.errors.email}</p>
+                                    <p className="form-error">{this.state.errors.name}</p>
                                 }
                             </div>
                         </div>
                         <div className="form-group row">
-                            <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
+                            <label htmlFor="price" className="col-sm-2 col-form-label">Price per piece (Rs.)</label>
                             <div className="col-sm-10">
-                                <input type="password" className="form-control" id="password" placeholder="secret" required onChange={this.handleChange} />
+                                <input type="number" min="0" step="any" className="form-control" id="price" placeholder="100" required onChange={this.handleChange} />
                                 {
                                     this.state.isError &&
-                                    <p className="form-error">{this.state.errors.password}</p>
+                                    <p className="form-error">{this.state.errors.price}</p>
+                                }
+                            </div>
+                        </div>
+                        <div className="form-group row">
+                            <label htmlFor="quantity" className="col-sm-2 col-form-label">Dispatch Quantity</label>
+                            <div className="col-sm-10">
+                                <input type="number" min="0" step="1" className="form-control" id="quantity" placeholder="50" required onChange={this.handleChange} />
+                                {
+                                    this.state.isError &&
+                                    <p className="form-error">{this.state.errors.quantity}</p>
                                 }
                             </div>
                         </div>
                         <div className="form-group row">
                             <div className="col-12 text-center">
-                                <input type="button" className="btn light-grey shadow-move" onClick={this.handleSubmit} value="Log in" />
+                                <input type="button" className="btn muave shadow-move" onClick={this.handleSubmit} value="Add Product" />
                             </div>
                         </div>
                     </form>
                 </div>
             </React.Fragment>
-        );
+
+        )
     }
 }

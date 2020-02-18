@@ -7,4 +7,8 @@ module.exports = {
     USER_TYPE_VEND:1,
     TOKEN_EXPIRY: 31556926, // 1 year in seconds
 
+    PROD_TYPE_WAIT: 'W',
+    PROD_TYPE_PLACE: 'P',
+    PROD_TYPE_DISPATCH: 'D',
+    PROD_TYPE_CANCEL: 'C'
 };

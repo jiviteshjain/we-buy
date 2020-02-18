@@ -7,6 +7,7 @@ import $ from 'jquery';
 import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
+import conf from './config';
 import './App.css';
 
 import setAuthToken from './set-auth-token';
@@ -15,6 +16,8 @@ import Landing from './components/landing'
 import RegisterCustomer from './components/register-customer';
 import RegisterVendor from './components/register-vendor';
 import Login from './components/login';
+import AddProduct from './components/add-product';
+import EnforceLogin from './components/enforce-login';
 
 class App extends Component {
 	constructor() {
@@ -41,15 +44,37 @@ class App extends Component {
 			token: token
 		});
 	}
-
+	componentWillMount() {
+		if (localStorage && localStorage.weBuyToken) {
+			this.attemptLogin(localStorage.weBuyToken);
+		}
+	}
   	render() {
+		
 		return (
 			<Router>
 				<Navbar/>
 				<Route exact path="/" component={Landing} />
 				<Route exact path="/auth/register/customer" component={RegisterCustomer} />
 				<Route exact path="/auth/register/vendor" component={RegisterVendor} />
-				<Route exact path="/auth/login" render={(props) => <Login {...props} attemptLogin={this.attemptLogin}/>} />
+				<Route exact path = "/auth/login"
+				render = {
+						(props) => < Login {
+							...props
+						}
+						attemptLogin = {
+							this.attemptLogin
+						}
+						/>} />
+				<Route exact path = "/vendor/product/add"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={conf.USER_TYPE_VEND}
+						path='/vendor/product/add'
+						component={AddProduct}
+						/>} />
 			</Router>
 		);
 	}
