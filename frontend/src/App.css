@@ -12,18 +12,24 @@ body {
   font-size: 1.2rem;
 }
 
+body a {
+  text-decoration: none !important;
+  color: unset !important;
+}
+
 body a:hover {
   text-decoration: none !important;
   color: unset !important;
 }
 
-Link {
-	color: unset;
+body Link {
+  color: unset !important;
+  text-decoration: none !important;
 }
 
-Link:hover {
-	text-decoration: none;
-	color: unset;
+body Link:hover {
+	text-decoration: none !important;
+	color: unset !important;
 }
 
 .btn:hover {
@@ -46,28 +52,33 @@ Link:hover {
 
 .sea-green {
   background-color: var(--sea-green);
-  color: black;
+  color: black !important;
 }
 
 .muave {
   background-color: var(--muave);
-  color: white;
+  color: white !important;
 }
 
 .light-grey {
   background-color: var(--light-grey);
-  color: black;
+  color: black !important;
 }
 
 .red {
   background-color: var(--red);
-  color: white;
+  color: white !important;
 }
 
 .page-title {
 	font-family: "Barlow", sans-serif;
 	font-size: 3rem;
 	color: var(--dark-grey);
+}
+
+.status-bar {
+  color: black !important;
+  font-family: 'Barlow Condensed', sans-serif;
 }
 
 /* HEADER */

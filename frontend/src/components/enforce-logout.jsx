@@ -8,14 +8,15 @@ export default class EnforceLogout extends Component {
         if (!this.props.isLoggedIn) {
             isLoggedIn = false;
         }
-        if (this.props.type != this.props.desiredType) {
+        if (!this.props.desiredType.includes(this.props.type)) {
             isLoggedIn = false;
         }
         if (isLoggedIn) {
-            if (this.props.type == conf.USER_TYPE_CUST)
+            if (this.props.type === conf.USER_TYPE_CUST) {
                 return <Redirect to="/customer/dashboard" />;
-            else
+            } else {
                 return <Redirect to="/vendor/dashboard" />;
+            }
         } else {
             if (this.props.hasProps) {
                 return <Route to={this.props.path} render={

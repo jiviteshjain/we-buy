@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from 'axios';
 
-import PageTitle from './page-title'
+import PageTitle from './page-title';
+import StatusBar from './status-bar';
 
 export default class RegisterVendor extends Component {
     constructor() {
@@ -51,6 +52,7 @@ export default class RegisterVendor extends Component {
     render() {
         return (
             <React.Fragment>
+                <StatusBar backPath='/' />
                 <PageTitle bold="Register" normal=" as vendor" />
                 <div className="container">
                     <form>

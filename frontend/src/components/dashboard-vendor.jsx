@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom
 import axios from 'axios';
 
 import PageTitle from './page-title';
+import StatusBar from './status-bar';
 import dashboardPic from '../assets/img/vendor-dashboard.svg';
 import addPic from '../assets/img/vendor-add.svg';
 
@@ -10,6 +11,7 @@ export default class VendorDashboard extends Component {
     render() {
         return (
             <React.Fragment>
+                <StatusBar userName={this.props.userName} logoutPath='/auth/logout' />
                 <PageTitle bold="At a" normal=" glance" />
                 <div className="container">
                     <div className="row mb-5">
@@ -20,7 +22,7 @@ export default class VendorDashboard extends Component {
                     <div className="row mb-4">
                         <div className="col-12 w-md-75">
                             <div className="card shadow-move">
-                                <div className="row">
+                                <div className="row mx-2">
                                     <div className="col-3 d-none d-md-flex text-center align-items-center justify-content-center">
                                         <img src={addPic} className="mx-2 card-pic" width="100%"/>
                                     </div>

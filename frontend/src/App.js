@@ -20,6 +20,7 @@ import AddProduct from './components/add-product';
 import EnforceLogin from './components/enforce-login';
 import EnforceLogout from './components/enforce-logout';
 import VendorDashboard from './components/dashboard-vendor';
+import CustomerDashboard from './components/dashboard-customer';
 
 class App extends Component {
 	constructor() {
@@ -63,7 +64,7 @@ class App extends Component {
 						(props) => <EnforceLogout {...props}
 						isLoggedIn={this.state.isLoggedIn}
 						type={this.state.userType}
-						desiredType={conf.USER_TYPE_VEND}
+						desiredType={[conf.USER_TYPE_CUST, conf.USER_TYPE_VEND]}
 						path='/auth/register/customer'
 						hasProps={false}
 						component={RegisterCustomer}
@@ -75,7 +76,7 @@ class App extends Component {
 						(props) => <EnforceLogout {...props}
 						isLoggedIn={this.state.isLoggedIn}
 						type={this.state.userType}
-						desiredType={conf.USER_TYPE_VEND}
+						desiredType={[conf.USER_TYPE_VEND, conf.USER_TYPE_CUST]}
 						path='/auth/register/vendor'
 						hasProps={false}
 						component={RegisterCustomer}
@@ -88,7 +89,7 @@ class App extends Component {
 						(props) => <EnforceLogout {...props}
 						isLoggedIn={this.state.isLoggedIn}
 						type={this.state.userType}
-						desiredType={conf.USER_TYPE_VEND}
+						desiredType={[conf.USER_TYPE_VEND, conf.USER_TYPE_CUST]}
 						path='/auth/login'
 						hasProps={true}
 						component={<Login attemptLogin={this.attemptLogin}/>}
@@ -107,7 +108,7 @@ class App extends Component {
 						(props) => <EnforceLogin {...props}
 						isLoggedIn={this.state.isLoggedIn}
 						type={this.state.userType}
-						desiredType={conf.USER_TYPE_VEND}
+						desiredType={[conf.USER_TYPE_VEND]}
 						path='/vendor/dashboard'
 						hasProps={true}
 						component={<VendorDashboard userName={this.state.userName}/>}
@@ -117,10 +118,21 @@ class App extends Component {
 						(props) => <EnforceLogin {...props}
 						isLoggedIn={this.state.isLoggedIn}
 						type={this.state.userType}
-						desiredType={conf.USER_TYPE_VEND}
+						desiredType={[conf.USER_TYPE_VEND]}
 						path='/vendor/product/add'
-						hasProps={false}
-						component={AddProduct}
+						hasProps={true}
+						component={<AddProduct userName={this.state.userName}/>}
+						/>} />
+
+				<Route exact path = "/customer/dashboard"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_CUST]}
+						path='/customer/dashboard'
+						hasProps={true}
+						component={<CustomerDashboard userName={this.state.userName}/>}
 						/>} />
 				
 			</Router>

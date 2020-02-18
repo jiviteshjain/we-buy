@@ -7,7 +7,7 @@ export default class EnforceLogin extends Component {
         if (!this.props.isLoggedIn) {
             isLoggedIn = false;
         }
-        if (this.props.type != this.props.desiredType) {
+        if (!this.props.desiredType.includes(this.props.type)) {
             isLoggedIn = false;
         }
 

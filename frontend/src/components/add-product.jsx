@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import axios from 'axios';
 
-import PageTitle from './page-title'
+import PageTitle from './page-title';
+import StatusBar from './status-bar';
 
 export default class AddProduct extends Component {
     constructor() {
@@ -50,6 +51,7 @@ export default class AddProduct extends Component {
     render() {
         return (
             <React.Fragment>
+                <StatusBar backPath="/vendor/dashboard" userName={this.props.userName} logoutPath='/auth/logout' />
                 <PageTitle bold="Add" normal=" a product" />
                 <div className="container">
                     <form>

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom
 import axios from 'axios';
 
 import PageTitle from './page-title';
+import StatusBar from './status-bar';
 
 export default class Login extends Component {
     constructor(props) {
@@ -52,6 +53,7 @@ export default class Login extends Component {
     render() {
         return (
             <React.Fragment>
+                <StatusBar backPath='/' />
                 <PageTitle bold="Log" normal=" in" />
                 <div className="container">
                     <form>
