@@ -7,6 +7,7 @@ const passport = require("passport");
 const conf = require("./config");
 const authRouter = require("./routes/auth");
 const vendorRouter = require("./routes/vendor");
+const customerRouter = require("./routes/customer");
 
 const app = express();
 const PORT = conf.EXPRESS_PORT;
@@ -41,6 +42,7 @@ require("./passport-conf")(passport);
 // auth
 app.use("/auth", authRouter);
 app.use("/vendor", vendorRouter);
+app.use("/customer", customerRouter);
 
 app.listen(PORT, function () {
     console.log("Server is running on port: " + PORT);
