@@ -21,6 +21,7 @@ import EnforceLogin from './components/enforce-login';
 import EnforceLogout from './components/enforce-logout';
 import VendorDashboard from './components/dashboard-vendor';
 import CustomerDashboard from './components/dashboard-customer';
+import VendorProductList from './components/vendor-product-list';
 
 class App extends Component {
 	constructor() {
@@ -122,6 +123,50 @@ class App extends Component {
 						path='/vendor/product/add'
 						hasProps={true}
 						component={<AddProduct userName={this.state.userName}/>}
+						/>} />
+				
+				<Route exact path = "/vendor/product/list/all"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_VEND]}
+						path='/vendor/product/list/all'
+						hasProps={true}
+						component={<VendorProductList userName={this.state.userName} what="All" />}
+						/>} />
+				
+				<Route exact path = "/vendor/product/list/wait"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_VEND]}
+						path='/vendor/product/list/wait'
+						hasProps={true}
+						component={<VendorProductList userName={this.state.userName} what="Waiting" filter={conf.PROD_TYPE_WAIT} />}
+						/>} />
+				
+				<Route exact path = "/vendor/product/list/ready"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_VEND]}
+						path='/vendor/product/list/ready'
+						hasProps={true}
+						component={<VendorProductList userName={this.state.userName} what="Ready" filter={conf.PROD_TYPE_PLACE} />}
+						/>} />
+
+				<Route exact path = "/vendor/product/list/dispatch"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_VEND]}
+						path='/vendor/product/list/dispatch'
+						hasProps={true}
+						component={<VendorProductList userName={this.state.userName} what="Dispatched" filter={conf.PROD_TYPE_DISPATCH} />}
 						/>} />
 
 				<Route exact path = "/customer/dashboard"

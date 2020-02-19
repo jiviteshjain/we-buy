@@ -41,7 +41,7 @@ export default class VendorDashboard extends Component {
                                 <div className="card-body">
                                     <h4 className="card-title">View all products</h4>
                                     <p className="card-text">View and manage all your products here.</p>
-                                    <Link to="/" className="btn muave shadow-move">View All Products</Link>
+                                    <Link to="/vendor/product/list/all" className="btn muave shadow-move">View All Products</Link>
                                 </div>
                             </div>
                         </div>
@@ -50,7 +50,7 @@ export default class VendorDashboard extends Component {
                                 <div className="card-body">
                                     <h4 className="card-title">View waiting products</h4>
                                     <p className="card-text">View and manage your waiting products here.</p>
-                                    <Link to="/" className="btn muave shadow-move">View Waiting Products</Link>
+                                    <Link to="/vendor/product/list/wait" className="btn muave shadow-move">View Waiting Products</Link>
                                 </div>
                             </div>
                         </div>
@@ -59,7 +59,7 @@ export default class VendorDashboard extends Component {
                                 <div className="card-body">
                                     <h4 className="card-title">View ready products</h4>
                                     <p className="card-text">View and manage your ready products here.</p>
-                                    <Link to="/" className="btn muave shadow-move">View Ready Products</Link>
+                                    <Link to="/vendor/product/list/ready" className="btn muave shadow-move">View Ready Products</Link>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +68,7 @@ export default class VendorDashboard extends Component {
                                 <div className="card-body">
                                     <h4 className="card-title">View dispatched products</h4>
                                     <p className="card-text">View and manage your dispatched products here.</p>
-                                    <Link to="/" className="btn muave shadow-move">View Dispatched Products</Link>
+                                    <Link to="/vendor/product/list/dispatch" className="btn muave shadow-move">View Dispatched Products</Link>
                                 </div>
                             </div>
                         </div>
