@@ -25,7 +25,6 @@ import VendorProductList from './components/vendor-product-list';
 import CustomerSearchProduct from './components/customer-search-product';
 import CustomerViewProduct from './components/customer-view-product';
 import CustomerListOrder from './components/customer-list-order';
-import CutomerViewOrder from './components/customer-view-order';
 import CustomerViewOrder from './components/customer-view-order';
 
 class App extends Component {

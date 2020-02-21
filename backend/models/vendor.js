@@ -22,10 +22,8 @@ const VendorSchema = new mongoose.Schema({
         default: Date.now
     },
     currentRating: {
-        type: Number,
-        default: 0,
-        min: 0,
-        max: 5
+        type: String,
+        default: "0",
     },
     numberRatings: {
         type: Number,

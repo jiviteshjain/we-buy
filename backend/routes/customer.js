@@ -42,7 +42,7 @@ router.post("/product/list", protect((req, res, result) => {
                 if (!error) {
                     for (o of query2) {
                         usedQuan += o.quantity;
-                        if (o.rating != -1) {
+                        if (o.rating != 0) {
                             rating += o.rating;
                             ratingCount++;
                         }
@@ -98,7 +98,7 @@ router.post("/product/details", protect((req, res, result) => {
                     console.log(o)
                     usedQuan += o.quantity;
                     console.log(usedQuan)
-                    if (o.rating != -1) {
+                    if (o.rating != 0) {
                         rating += o.rating;
                         ratingCount++;
                     }
@@ -252,6 +252,195 @@ router.post("/order/list", protect((req, res, result) => {
             }
         });
     }
+}));
+
+router.post("/order/edit", protect((req, res, result) => {
+    if (result.type != conf.USER_TYPE_CUST) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+    }
+
+    if (!req.body.orderId || isEmpty(req.body.orderId)) {
+        res.status(401).json({quantity: "Order ID missing"});
+        return;
+    }
+    if (!req.body.quantity || isEmpty(req.body.quantity)) {
+        res.status(401).json({
+            quantity: "Quantity cannot be empty"
+        });
+        return;
+    }
+
+    Order.findOne({
+                "_id": req.body.orderId
+            }).populate("customerId").populate({
+                path: "productId",
+                populate: {
+                    path: "vendorId"
+                }
+            }).exec((error, query) => {
+            if (!error) {
+                if (query == null) {
+                    res.status(401).json({error: "Order ID invalid"});
+                    return;
+                }
+                if (query.customerId._id != result.id) {
+                    res.status(403).json({error: "Forbidden"});
+                }
+
+                if (query.productId.state == conf.PROD_TYPE_WAIT) {
+                    let usedQuan = 0;
+                    Order.find({
+                        "productId": query.productId._id
+                    }, (error2, query2) => {
+                        if (!error2) {
+                            for (o of query2) {
+                                usedQuan += o.quantity;
+                            }
+                            let remQuan = Math.max(0, query.productId.quantity - usedQuan);
+                            let oldOrderQuan = query.quantity;
+                            let newOrderQuan = req.body.quantity;
+                            console.log("qwerty")
+                            console.log(newOrderQuan);
+
+                            if (newOrderQuan <= oldOrderQuan) {
+                                query.quantity = newOrderQuan;
+                                query.save();
+                                res.end();
+                                return;
+                            } else {
+                                query.quantity = newOrderQuan;
+                                query.save();
+
+                                remQuan -= (newOrderQuan - oldOrderQuan);
+                                if (remQuan < 0) {
+                                    res.status(401).json({quantity: "Not enough product available"});
+                                    return;
+                                } else if (remQuan == 0) {
+                                    Product.findByIdAndUpdate({"_id": query.productId._id}, {"state": console.PROD_TYPE_PLACE}, (err, query3) => {
+                                        // console.log(done)
+                                        res.end();
+                                        return;
+                                    });
+                                }
+                            }
+                            
+                        }
+                    });
+                } else {
+                    res.status(401).json({error: "Order not editable"});
+                    return;
+                }
+
+            } else {
+                res.status(500).json(error);
+            }
+        });
+    
+    
+}));
+
+router.post("/order/rate/vendor", protect((req, res, result) => {
+    if (result.type != conf.USER_TYPE_CUST) {
+        res.status(403).json({ error: "Forbidden" });
+        return;
+    }
+
+    if (!req.body.vendorId || isEmpty(req.body.vendorId)) {
+        res.status(401).json({vendorRating: "Vendor ID missing"});
+        return;
+    }
+
+    if (!req.body.rating || isEmpty(req.body.rating)) {
+        res.status(401).json({
+            vendorRating: "Rating cannot be empty"
+        });
+        return;
+    }
+
+    let vendorRating = parseInt(req.body.rating);
+    if (!Number.isInteger(vendorRating) || vendorRating < 1 || vendorRating > 5) {
+        res.status(401).json({
+            vendorRating: "Rating must be between 1 and 5"
+        });
+    }
+
+    Vendor.findOne({"_id": req.body.vendorId}, (error, query) => {
+        if (!error) {
+            if (query == null) {
+                res.status(401).json({vendorRating: "Vendor ID does not exist"});
+                return;
+            }
+
+            let rating = parseFloat(query.currentRating);
+            let num = query.numberRatings;
+            console.log("---")
+            console.log(rating)
+            console.log(num)
+            rating = ((rating * num) + vendorRating) / (num + 1);
+            num++;
+            console.log(rating)
+            console.log(num)
+            query.currentRating = `${rating}`;
+            query.numberRatings = num;
+            query.save();
+            res.end();
+        }
+    });
+}));
+
+router.post("/order/rate/product", protect((req, res, result) => {
+    if (result.type != conf.USER_TYPE_CUST) {
+        res.status(403).json({
+            error: "Forbidden"
+        });
+        return;
+    }
+
+    if (!req.body.orderId || isEmpty(req.body.orderId)) {
+        res.status(401).json({
+            productRating: "Order ID missing"
+        });
+        return;
+    }
+
+    if (!req.body.productRating || isEmpty(req.body.productRating)) {
+        res.status(401).json({
+            productRating: "Rating cannot be empty"
+        });
+        return;
+    }
+
+    let productRating = parseInt(req.body.productRating);
+    if (!Number.isInteger(productRating) || productRating < 1 || productRating > 5) {
+        res.status(401).json({
+            productRating: "Rating must be between 1 and 5"
+        });
+    }
+
+    if (!req.body.productReview || isEmpty(req.body.productReview)) {
+        res.status(401).json({
+            productReview: "Review cannot be empty"
+        });
+        return;
+    }
+
+    Order.findOne({"_id": req.body.orderId}, (error, query) => {
+        if (!error) {
+            if (query == null) {
+                res.status(401).json({productRating: "Order ID does not exist"});
+                return;
+            }
+
+            query.rating = productRating;
+            query.review = req.body.productReview;
+            query.save();
+            console.log("test")
+            res.end();
+        }
+    });
+
+
 }));
 
 module.exports = router;

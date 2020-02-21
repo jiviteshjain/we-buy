@@ -85,7 +85,7 @@ export default class CustomerViewProduct extends Component {
         if (this.state.error) {
             return <h1>Error</h1>
         }
-        const revList = this.state.product.orders.filter(prod => prod.rating != -1).map((order) =>
+        const revList = this.state.product.orders.filter(prod => prod.rating != 0).map((order) =>
             <div className="row mb-4">
                 <div className="col-12">
                     <div className="card">
