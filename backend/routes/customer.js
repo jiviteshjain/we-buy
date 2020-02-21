@@ -78,7 +78,7 @@ router.post("/product/details", protect((req, res, result) => {
 
         const prod = query[0];
         if (result.type == conf.USER_TYPE_VEND) {
-            if (prod.vendor._id != result.id) {
+            if (prod.vendorId._id != result.id) {
                 res.status(403).json({error: "Forbidden"});
                 return;
             }

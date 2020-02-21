@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import axios from 'axios';
 
+import conf from '../config';
+
 import PageTitle from './page-title';
 import StatusBar from './status-bar';
 import VendorProductCard from './vendor-product-card';
@@ -21,15 +23,8 @@ export default class VendorProductList extends Component {
             method: "GET",
             url: "/vendor/product/list",
         }).then((response) => {
-            console.log(response);
-            let products;
-            if (this.props.filter) {
-                products = response.data.filter(curr => curr.state === this.props.filter);
-            } else {
-                products = response.data;
-            }
             this.setState({
-                products: products,
+                products: response.data,
                 error: null,
                 isLoaded: true
             });
@@ -51,13 +46,34 @@ export default class VendorProductList extends Component {
         if (this.state.error) {
             return <h1>Error</h1>
         }
-        const prodList = this.state.products.map((product) => 
-            <div className="row mb-4">
-                <div className="col-12">
-                    <VendorProductCard product={product} onClick={this.handleClick} />
+        let prodList = null;
+        if (this.props.filter == "all") {
+            console.log(this.state.products)
+            prodList = this.state.products.map((product) => 
+                <div className="row mb-4">
+                    <div className="col-12">
+                        <VendorProductCard product={product} onClick={this.handleClick} backPath="all" />
+                    </div>
                 </div>
-            </div>
-        );
+            );
+            console.log(prodList);
+        } else {
+            let backPath = null;
+            if (this.props.filter == conf.PROD_TYPE_WAIT) {
+                backPath = "wait"
+            } else if (this.props.filter == conf.PROD_TYPE_PLACE) {
+                backPath = "ready"
+            } else if (this.props.filter == conf.PROD_TYPE_DISPATCH) {
+                backPath = "dispatch"
+            }
+            prodList = this.state.products.filter(prod => prod.state == this.props.filter).map((product) =>
+                <div className="row mb-4">
+                    <div className="col-12">
+                        <VendorProductCard product={product} onClick={this.handleClick} backPath={backPath} />
+                    </div>
+                </div>
+            );
+        }
         return (
             <React.Fragment>
                 <StatusBar backPath='/vendor/dashboard' userName={this.props.userName} logoutPath='/auth/logout' />

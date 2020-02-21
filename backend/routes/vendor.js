@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const conf = require("../config");
 const protect = require("../utils");
+const isEmpty = require("is-empty");
 
 // load input validation
 const validateAddProductInput = require("../validation/add-product");
@@ -94,6 +95,74 @@ router.get("/product/list", protect((req, res, result) => {
         console.log(query);
 
         res.json(query);
+    });
+}));
+
+router.post("/product/cancel", protect((req, res, result) => {
+    if (result.type != conf.USER_TYPE_VEND) {
+        res.status(403).json({error: "Forbidden"});
+        return;
+    }
+
+    if (!req.body.productId || isEmpty(req.body.productId)) {
+        res.status(401).json({error: "Product ID missing"});
+        return;
+    }
+
+    Product.findOne({"_id": req.body.productId}, (error, query) => {
+        if (!error) {
+            if (query == null) {
+                res.status(401).json({error: "Invalid Product ID"});
+                return;
+            }
+
+            if (query.vendorId != result.id) {
+                res.status(403).json({error: "Forbidden"});
+                return;
+            }
+
+            if (query.state != conf.PROD_TYPE_WAIT) {
+                res.status(401).json({error: "Product cannot be cancelled"});
+                return;
+            }
+            query.state = conf.PROD_TYPE_CANCEL;
+            query.save();
+            res.end();
+        }
+    });
+}));
+
+router.post("/product/dispatch", protect((req, res, result) => {
+    if (result.type != conf.USER_TYPE_VEND) {
+        res.status(403).json({error: "Forbidden"});
+        return;
+    }
+
+    if (!req.body.productId || isEmpty(req.body.productId)) {
+        res.status(401).json({error: "Product ID missing"});
+        return;
+    }
+
+    Product.findOne({"_id": req.body.productId}, (error, query) => {
+        if (!error) {
+            if (query == null) {
+                res.status(401).json({error: "Invalid Product ID"});
+                return;
+            }
+
+            if (query.vendorId != result.id) {
+                res.status(403).json({error: "Forbidden"});
+                return;
+            }
+
+            if (query.state != conf.PROD_TYPE_PLACE) {
+                res.status(401).json({error: "Product cannot be cancelled"});
+                return;
+            }
+            query.state = conf.PROD_TYPE_DISPATCH;
+            query.save();
+            res.end();
+        }
     });
 }));
 

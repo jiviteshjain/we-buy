@@ -35,7 +35,15 @@ export default class VendorProductCard extends Component {
                             })()}
                             <b>Rating: </b>{this.props.product.rating}<br />
                         </p>
-                        <button className="btn muave shadow-move" id={this.props.product._id} onClick={this.props.onClick}>View</button>
+                        <Link className="btn muave shadow-move" id={this.props.product._id}  to={
+                            {
+                                pathname: "/vendor/product/details",
+                                state: {
+                                    productId: this.props.product._id,
+                                    backPath: this.props.backPath
+                                }
+                            }
+                        }>View</Link>
                     </div>
                 </div>
             </div>

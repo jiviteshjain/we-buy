@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link , Switch} from "react-router-dom";
+import { BrowserRouter as Router, Route, Link , Switch, Redirect} from "react-router-dom";
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -22,6 +22,7 @@ import EnforceLogout from './components/enforce-logout';
 import VendorDashboard from './components/dashboard-vendor';
 import CustomerDashboard from './components/dashboard-customer';
 import VendorProductList from './components/vendor-product-list';
+import VendorViewProduct from './components/vendor-view-product';
 import CustomerSearchProduct from './components/customer-search-product';
 import CustomerViewProduct from './components/customer-view-product';
 import CustomerListOrder from './components/customer-list-order';
@@ -38,6 +39,7 @@ class App extends Component {
 			token: null
 		};
 		this.attemptLogin = this.attemptLogin.bind(this);
+		this.logout = this.logout.bind(this);
 	}
 
 	attemptLogin(token) {
@@ -52,6 +54,24 @@ class App extends Component {
 			token: token
 		});
 	}
+
+	logout() {
+		console.log("loggesd")
+		if (localStorage && localStorage.weBuyToken) {
+			localStorage.removeItem("weBuyToken");
+		}
+
+		this.setState({
+			isLoggedIn: false,
+			userName: null,
+			userId: null,
+			userType: null,
+			token: null
+		});
+
+		return <Redirect to="/" />
+	}
+
 	componentWillMount() {
 		if (localStorage && localStorage.weBuyToken) {
 			this.attemptLogin(localStorage.weBuyToken);
@@ -137,7 +157,7 @@ class App extends Component {
 						desiredType={[conf.USER_TYPE_VEND]}
 						path='/vendor/product/list/all'
 						hasProps={true}
-						component={<VendorProductList userName={this.state.userName} what="All" />}
+						component={<VendorProductList userName={this.state.userName} filter="all" what="All" />}
 						/>} />
 				
 				<Route exact path = "/vendor/product/list/wait"
@@ -171,6 +191,17 @@ class App extends Component {
 						path='/vendor/product/list/dispatch'
 						hasProps={true}
 						component={<VendorProductList userName={this.state.userName} what="Dispatched" filter={conf.PROD_TYPE_DISPATCH} />}
+						/>} />
+
+				<Route exact path = "/vendor/product/details"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_VEND]}
+						path='/vendor/product/details'
+						hasProps={true}
+						component={<VendorViewProduct userName={this.state.userName} backPath={props.location.state.backPath} productId={props.location.state.productId} />}
 						/>} />
 
 				<Route exact path = "/customer/dashboard"
@@ -227,6 +258,8 @@ class App extends Component {
 						hasProps={true}
 						component={<CustomerViewOrder userName={this.state.userName} orderId={props.location.state.orderId} />}
 						/>} />
+
+				<Route exact path="/auth/logout" render={this.logout} />
 			</Router>
 		);
 	}
