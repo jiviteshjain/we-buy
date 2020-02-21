@@ -25,6 +25,10 @@ module.exports = function validateAddProductInput(data) {
         errors.quantity = "That's not a number."
     }
 
+    if (!data.img || isEmpty(data.img)) {
+        errors.img = "We need an image.";
+    }
+
     return {
         errors,
         isValid: isEmpty(errors)

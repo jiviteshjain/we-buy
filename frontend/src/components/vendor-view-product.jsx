@@ -126,7 +126,7 @@ export default class VendorViewProduct extends Component {
                             <div className="card shadow">
                                 <div className="row mx-2">
                                     <div className="col-3 d-flex text-center align-items-center justify-content-center">
-                                        <img src={addPic} className="mx-2 card-pic" width="100%" />
+                                        <img src={this.state.product.image} className="mx-2 card-pic" width="100%" />
                                     </div>
                                     <div className="card-body col-md-9 col-12">
                                         <h4 className="card-title">{this.state.product.name}</h4>

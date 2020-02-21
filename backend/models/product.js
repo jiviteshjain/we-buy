@@ -40,8 +40,7 @@ const ProductSchema = new mongoose.Schema({
         type: [ReviewSchema]
     },
     image: {
-        data: Buffer,
-        contentType: String
+        type: String
     },
     state: {
         type: String,

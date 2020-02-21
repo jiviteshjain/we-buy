@@ -42,6 +42,7 @@ router.post("/product/add", protect((req, res, result) => {
         price: req.body.price,
         quantity: req.body.quantity,
         vendorId: vendorId,
+        image: req.body.img,
         state: conf.PROD_TYPE_WAIT
     });
 

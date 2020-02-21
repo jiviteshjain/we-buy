@@ -12,7 +12,8 @@ export default class AddProduct extends Component {
         this.state = {
             formData: {},
             isError: false,
-            errors: {}
+            errors: {},
+            img: null
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -20,6 +21,20 @@ export default class AddProduct extends Component {
     }
 
     handleChange(e) {
+
+        if (e.target.type == "file") {
+            var self = this;
+            var reader = new FileReader();
+            var file = e.target.files[0];
+
+            reader.onload = function(upload) {
+                const formData = Object.assign({}, self.state.formData);
+                formData.img = upload.target.result;
+                self.setState({ formData: formData });
+            }
+            reader.readAsDataURL(file);
+        }
+
         e.preventDefault();
         const formData = Object.assign({}, this.state.formData);
         formData[e.target.id] = e.target.value;
@@ -82,6 +97,16 @@ export default class AddProduct extends Component {
                                 {
                                     this.state.isError &&
                                     <p className="form-error">{this.state.errors.quantity}</p>
+                                }
+                            </div>
+                        </div>
+                        <div className="form-group row">
+                            <label htmlFor="img" className="col-sm-2 col-form-label">Image</label>
+                            <div className="col-sm-10">
+                                <input type="file" className="form-control" id="img" required onChange={this.handleChange} />
+                                {
+                                    this.state.isError &&
+                                    <p className="form-error">{this.state.errors.img}</p>
                                 }
                             </div>
                         </div>
