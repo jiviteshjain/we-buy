@@ -22,6 +22,11 @@ import EnforceLogout from './components/enforce-logout';
 import VendorDashboard from './components/dashboard-vendor';
 import CustomerDashboard from './components/dashboard-customer';
 import VendorProductList from './components/vendor-product-list';
+import CustomerSearchProduct from './components/customer-search-product';
+import CustomerViewProduct from './components/customer-view-product';
+import CustomerListOrder from './components/customer-list-order';
+import CutomerViewOrder from './components/customer-view-order';
+import CustomerViewOrder from './components/customer-view-order';
 
 class App extends Component {
 	constructor() {
@@ -180,6 +185,49 @@ class App extends Component {
 						component={<CustomerDashboard userName={this.state.userName}/>}
 						/>} />
 				
+				<Route exact path = "/customer/product/list"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_CUST]}
+						path='/customer/product/list'
+						hasProps={true}
+						component={<CustomerSearchProduct userName={this.state.userName} />}
+						/>} />
+				
+				<Route exact path = "/customer/product/details"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_CUST]}
+						path='/customer/product/details'
+						hasProps={true}
+						component={<CustomerViewProduct userName={this.state.userName} productId={props.location.state.productId} />}
+						/>} />
+
+				<Route exact path = "/customer/order/list"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_CUST]}
+						path='/customer/order/list'
+						hasProps={true}
+						component={<CustomerListOrder userName={this.state.userName} />}
+						/>} />
+
+				<Route exact path = "/customer/order/details"
+				render = {
+						(props) => <EnforceLogin {...props}
+						isLoggedIn={this.state.isLoggedIn}
+						type={this.state.userType}
+						desiredType={[conf.USER_TYPE_CUST]}
+						path='/customer/order/details'
+						hasProps={true}
+						component={<CustomerViewOrder userName={this.state.userName} orderId={props.location.state.orderId} />}
+						/>} />
 			</Router>
 		);
 	}

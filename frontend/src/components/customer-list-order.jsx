@@ -4,32 +4,26 @@ import axios from 'axios';
 
 import PageTitle from './page-title';
 import StatusBar from './status-bar';
-import VendorProductCard from './vendor-product-card';
+import CustomerOrderCard from './customer-order-card';
 
-export default class VendorProductList extends Component {
+export default class CustomerListOrder extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            products: [],
-            error: null,
-            isLoaded: false
+            orders: [],
+            isLoaded: false,
+            error: null
         };
-        this.handleClick = this.handleClick.bind(this);
     }
+    
     componentDidMount() {
         axios({
-            method: "GET",
-            url: "/vendor/product/list",
+            method: "POST",
+            url: "/customer/order/list",
         }).then((response) => {
             console.log(response);
-            let products;
-            if (this.props.filter) {
-                products = response.data.filter(curr => curr.state === this.props.filter);
-            } else {
-                products = response.data;
-            }
             this.setState({
-                products: products,
+                orders: response.data,
                 error: null,
                 isLoaded: true
             });
@@ -40,30 +34,29 @@ export default class VendorProductList extends Component {
             }
         });
     }
-    handleClick(e) {
-        e.preventDefault();
-        // redirect to product page
-    }
+    
     render() {
         if (!this.state.isLoaded) {
-            return <h1>Loading...</h1>;
+            return <h1>Loading...</h1>
         }
         if (this.state.error) {
             return <h1>Error</h1>
         }
-        const prodList = this.state.products.map((product) => 
+
+        const orderList = this.state.orders.map((order) =>
             <div className="row mb-4">
                 <div className="col-12">
-                    <VendorProductCard product={product} onClick={this.handleClick} />
+                    <CustomerOrderCard order={order} />
                 </div>
             </div>
         );
+
         return (
             <React.Fragment>
-                <StatusBar backPath='/vendor/dashboard' userName={this.props.userName} logoutPath='/auth/logout' />
-                <PageTitle bold={this.props.what} normal=' products' />
+                <StatusBar backPath="/customer/dashboard" userName={this.props.userName} logoutPath="/auth/logout" />
+                <PageTitle bold="Past" normal=" orders" />
                 <div className="container">
-                    {prodList}
+                    {orderList}
                 </div>
             </React.Fragment>
         );
