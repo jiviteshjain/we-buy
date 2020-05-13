@@ -104,7 +104,7 @@ class App extends Component {
 						desiredType={[conf.USER_TYPE_VEND, conf.USER_TYPE_CUST]}
 						path='/auth/register/vendor'
 						hasProps={false}
-						component={RegisterCustomer}
+						component={RegisterVendor}
 						/>} />
 				{/* <Route exact path="/auth/register/vendor" component={RegisterVendor} /> */}
 				

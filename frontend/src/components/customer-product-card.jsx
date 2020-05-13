@@ -20,9 +20,9 @@ export default class CustomerProductCard extends Component {
                             <b>Price: </b>{this.props.product.price}<br />
                             {(() => {
                                 if (this.props.product.state === conf.PROD_TYPE_WAIT)
-                                    return (<React.Fragment><b>Remaining Quantity: </b> {this.props.product.remQuan}<br /></React.Fragment>)
+                                    return (<React.Fragment><b>Total Quantity: </b> {this.props.product.remQuan}<br /></React.Fragment>)
                             })()}
-                            <b>Rating: </b>{this.props.product.rating}<br />
+                            <b>Vendor Rating: </b>{this.props.product.vendorId.currentRating}<br />
                         </p>
                         <Link className="btn red shadow-move" id={this.props.product._id} onClick={this.props.onClick} to={
                             {

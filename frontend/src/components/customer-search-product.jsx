@@ -46,7 +46,7 @@ export default class CustomerSearchProduct extends Component {
             if (e.target.id != "rating")
                 return a[e.target.id] - b[e.target.id];
             else
-                return b[e.target.id] - a[e.target.id];
+                return b.vendorId.currentRating - a.vendorId.currentRating;
         });
         this.setState({products: products});
     }

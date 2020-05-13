@@ -12,6 +12,12 @@ const Order = require("../models/order");
 
 const router = express.Router();
 
+async function asyncForEach(array, callback) {
+    for (let i = 0; i < array.length; i++) {
+        await callback(array[i], i);
+    }
+}
+
 // search products route
 // @route POST customer/product/list
 // @desc Search products
@@ -32,34 +38,69 @@ router.post("/product/list", protect((req, res, result) => {
         }
         // console.log(query);
 
-        for (let p of query) {
-            let usedQuan = 0;
-            let rating = 0;
-            let ratingCount = 0;
-            Order.find({
-                "productId": p._id
-            }, (error, query2) => {
-                if (!error) {
-                    for (o of query2) {
-                        usedQuan += o.quantity;
-                        if (o.rating != 0) {
-                            rating += o.rating;
-                            ratingCount++;
+        const start = async() => {
+            await asyncForEach(query, async (p) => {
+                let usedQuan = 0;
+                let rating = 0;
+                let ratingCount = 0;
+                Order.find({
+                    "productId": p._id
+                }, (error2, query2) => {
+                    if (!error2) {
+                        for (o of query2) {
+                            usedQuan += o.quantity;
+                            if (o.rating != 0) {
+                                rating += o.rating;
+                                ratingCount++;
+                            }
                         }
                     }
-                }
+                });
+                p.remQuan = Math.max(0, p.quantity - usedQuan);
+                p.rating = (ratingCount === 0) ? 0 : rating / ratingCount;
             });
-            p.remQuan = Math.max(0, p.quantity - usedQuan);
-            p.rating = (ratingCount === 0) ? 0 : rating / ratingCount;
-        }
-        console.log(query);
+            console.log(query);
 
-        if (req.body.search && !isEmpty(req.body.search)) {
-            const searcher = new FuzzySearch(query, ['name', 'vendorId.name'], {caseSensitive: false, sort: true});
-            query = searcher.search(req.body.search)
-        }
+            if (req.body.search && !isEmpty(req.body.search)) {
+                const searcher = new FuzzySearch(query, ['name', 'vendorId.name'], {
+                    caseSensitive: false,
+                    sort: true
+                });
+                query = searcher.search(req.body.search)
+            }
 
-        res.json(query);
+            res.json(query);
+        };
+        start();
+
+        // for (let p of query) {
+        //     let usedQuan = 0;
+        //     let rating = 0;
+        //     let ratingCount = 0;
+        //     Order.find({
+        //         "productId": p._id
+        //     }, (error, query2) => {
+        //         if (!error) {
+        //             for (o of query2) {
+        //                 usedQuan += o.quantity;
+        //                 if (o.rating != 0) {
+        //                     rating += o.rating;
+        //                     ratingCount++;
+        //                 }
+        //             }
+        //         }
+        //     });
+        //     p.remQuan = Math.max(0, p.quantity - usedQuan);
+        //     p.rating = (ratingCount === 0) ? 0 : rating / ratingCount;
+        // }
+        // console.log(query);
+
+        // if (req.body.search && !isEmpty(req.body.search)) {
+        //     const searcher = new FuzzySearch(query, ['name', 'vendorId.name'], {caseSensitive: false, sort: true});
+        //     query = searcher.search(req.body.search)
+        // }
+
+        // res.json(query);
     });
 
 }));
